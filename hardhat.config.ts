@@ -8,7 +8,7 @@ import { node_url, accounts } from "./utils/network";
 import "dotenv/config";
 
 const config: HardhatUserConfig = {
-  solidity: { version: "0.7.6" },
+  solidity: { version: "0.8.19" },
   namedAccounts: {
     deployer: 0,
     tokenOwner: 1,
@@ -16,11 +16,13 @@ const config: HardhatUserConfig = {
   networks: {
     testnet: {
       url: node_url("bsc_test"),
-      accounts: accounts("bsc_test"),
+      // accounts: accounts("bsc_test"),
+      accounts: [process.env.PRIVATE_KEY_TEST || ""],
     },
     mainnet: {
       url: node_url("bsc_main"),
-      accounts: accounts("bsc_main"),
+      // accounts: accounts("bsc_main"),
+      accounts: [process.env.PRIVATE_KEY_MAIN || ""],
     },
   },
   etherscan: {
