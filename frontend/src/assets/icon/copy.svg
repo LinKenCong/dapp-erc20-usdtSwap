@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #ffa800;
+        fill-rule: evenodd;
+      }
+    </style>
+  </defs>
+  <path id="复制" class="cls-1" d="M1118.43,1087.57H1121V1097h-9.43v-2.57H1109V1085h9.43v2.57Zm0,1.72v5.14h-5.14v0.86h6v-6h-0.86Zm-7.72-2.58v6h6v-6h-6Zm0,0" transform="translate(-1109 -1085)"/>
+</svg>
