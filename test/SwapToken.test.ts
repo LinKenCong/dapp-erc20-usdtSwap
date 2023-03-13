@@ -9,7 +9,7 @@ describe("Token contract", function () {
     const swapWallets = walletSigner.map((item: any) => item.address);
     expect(swapWallets.length).to.equal(6);
     // deploy
-    const TokenFactory = await ethers.getContractFactory("Token");
+    const TokenFactory = await ethers.getContractFactory("TestToken");
     const token = await TokenFactory.deploy();
     const usdt = await TokenFactory.deploy();
     const SwapTokenFactory = await ethers.getContractFactory("SwapToken");
