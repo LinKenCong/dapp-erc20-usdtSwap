@@ -6,6 +6,7 @@
   "scripts": {
     "prettier": "prettier --write 'src/**/*.sol'",
     "lint": "prettier --list-different 'src/**/*.sol'",
+    "compile": "hardhat compile",
     "coverage": "hardhat coverage",
     "clear": "rm -rf coverage typechain-types deployments cache artifacts coverage.json",
     "clear:all": "rm -rf node_modules deployments coverage typechain-types cache artifacts coverage.json",
