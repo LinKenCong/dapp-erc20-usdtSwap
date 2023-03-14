@@ -3,6 +3,7 @@
   background-image: url("./assets/img/bg.jpg");
   background-attachment: fixed;
   width: 100vw;
+  padding: 1.5rem;
 }
 .container {
   margin: 0 auto;
@@ -22,9 +23,22 @@
     overflow: hidden;
   }
 }
-.main_conten {
+.main_content {
   background-color: #fff;
-  padding: 2rem;
   border-radius: 0.4rem;
   box-shadow: 0 1px 2px 0 rgb(0 0 0 / 5%);
+}
+.page_content {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+.part_left {
+  padding: 2rem;
+}
+.part_right {
+  background-color: #3b3b3b;
+  color: #fff;
+  width: 35%;
+  padding: 2rem;
 }
