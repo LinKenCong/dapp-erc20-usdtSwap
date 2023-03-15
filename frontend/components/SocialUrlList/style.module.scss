@@ -1,0 +1,20 @@
+.SocialUrlList {
+  padding-bottom: 1rem;
+
+  ul {
+    list-style-type: none;
+    display: flex;
+    margin: 0;
+    padding: 0;
+  }
+  li {
+    background-color: #eee;
+    padding: 0.65rem;
+    border-radius: 0.4rem;
+    margin-right: 0.5rem;
+    line-height: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
