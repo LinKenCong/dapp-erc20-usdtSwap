@@ -1,8 +1,9 @@
+import { NextComponentType } from "next";
 import Image from "next/image";
 import img_main from "../../assets/img/临时配图.png";
 import style from "./style.module.scss";
 
-const ArticleSection = () => {
+const ArticleSection: NextComponentType = () => {
   return (
     <>
       <div className={style.ArticleSection}>

@@ -1,3 +1,4 @@
+import { NextComponentType } from "next";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useState } from "react";
 import icon_logo from "../../assets/logo/logo.png";
@@ -5,7 +6,7 @@ import icon_language from "../../assets/icon/language.svg";
 import Image from "next/image";
 import style from "./style.module.scss";
 
-const HeaderNav = () => {
+const HeaderNav: NextComponentType = () => {
   return (
     <>
       <div className={style.HeaderNav}>
