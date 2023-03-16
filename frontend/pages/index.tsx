@@ -11,6 +11,7 @@ import ProgressBar from "../components/ProgressBar";
 import NoticeBoard from "../components/NoticeBoard";
 
 import style from "../styles/Home.module.scss";
+import 'antd/dist/reset.css';
 
 const Home: NextPage = () => {
   return (
