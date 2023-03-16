@@ -22,7 +22,7 @@ export const CONTRACT_USDT_MAP = {
 export const TOKEN_INFO_MAP = {
   swapToken: {
     name: "Token name",
-    symbol: "Token symbol",
+    symbol: "ZRO",
     decimals: "18",
   },
   usdt: {
