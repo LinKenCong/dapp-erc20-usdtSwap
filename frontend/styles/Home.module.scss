@@ -40,5 +40,11 @@
   background-color: #3b3b3b;
   color: #fff;
   min-width: 35%;
-  padding: 2rem;
+  .part_right_top {
+    padding: 2rem;
+    border-bottom: 1px solid #eee;
+  }
+  .part_right_bottom {
+    padding: 2rem;
+  }
 }
