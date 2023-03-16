@@ -21,7 +21,7 @@ const ArticleSection: NextComponentType = () => {
             of the language,and began my colorfuldream.
           </div>
           <div className={style.img}>
-            <Image src={img_main} />
+            <Image src={img_main} alt="artcle img" />
           </div>
         </article>
       </div>

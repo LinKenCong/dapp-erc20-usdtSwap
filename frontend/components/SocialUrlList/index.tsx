@@ -32,15 +32,13 @@ const IconList = [
 ];
 
 const SocialUrlList: NextComponentType = () => {
-  const IconItem = (url: any) => <Image src={url} alt="icon" />;
-
   return (
     <>
       <div className={style.SocialUrlList}>
         <ul>
           {IconList.map((item: any, index) => (
             <li style={{ backgroundColor: item.bgColor }} key={index}>
-              <a href={item.url} target={"_blank"}>
+              <a href={item.url}>
                 <Image src={item.img} alt="icon" />
               </a>
             </li>
