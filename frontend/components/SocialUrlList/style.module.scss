@@ -9,12 +9,14 @@
   }
   li {
     background-color: #eee;
-    padding: 0.65rem;
     border-radius: 0.4rem;
     margin-right: 0.5rem;
     line-height: 1rem;
     display: flex;
     justify-content: center;
     align-items: center;
+  }
+  a {
+    padding: 0.65rem;
   }
 }
