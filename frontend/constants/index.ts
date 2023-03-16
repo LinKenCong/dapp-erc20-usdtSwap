@@ -31,3 +31,10 @@ export const TOKEN_INFO_MAP = {
     decimals: "18",
   },
 };
+
+export const CURRENT_CONTRACT = {
+  swaptoken:
+    process.env.NEXT_PUBLIC_ENABLE_TESTNETS === "true"
+      ? CONTRACT_SWAPTOKEN_MAP[97]
+      : CONTRACT_SWAPTOKEN_MAP[56],
+};
