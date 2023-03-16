@@ -10,13 +10,13 @@ export enum SupportedChainId {
 }
 
 export const CONTRACT_SWAPTOKEN_MAP = {
-  [SupportedChainId.BSC]: "",
-  [SupportedChainId.BSC_TESTNET]: "",
+  [SupportedChainId.BSC]: "0x000000000000000000000000000000000000main",
+  [SupportedChainId.BSC_TESTNET]: "0x000000000000000000000000000000000000test",
 };
 
 export const CONTRACT_USDT_MAP = {
   [SupportedChainId.BSC]: "0x55d398326f99059fF775485246999027B3197955",
-  [SupportedChainId.BSC_TESTNET]: "",
+  [SupportedChainId.BSC_TESTNET]: "0x000000000000000000000000000000000000test",
 };
 
 export const TOKEN_INFO_MAP = {
@@ -30,6 +30,13 @@ export const TOKEN_INFO_MAP = {
     symbol: "BSC-USD",
     decimals: "18",
   },
+};
+
+export const SOCIAL_URL_LIST = {
+  twitter: "https://www.google.com/",
+  discord: "https://www.google.com/",
+  youtube: "https://www.google.com/",
+  telegram: "https://www.google.com/",
 };
 
 export const CURRENT_CONTRACT = {
