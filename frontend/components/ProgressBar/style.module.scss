@@ -1,0 +1,15 @@
+.ProgressBar {
+  > div {
+    padding: 0;
+    margin: 0;
+  }
+  .sellInfo {
+    font-size: 0.5rem;
+    opacity: 0.5;
+    display: flex;
+    justify-content: space-between;
+  }
+  .symbol {
+    margin-left: 0.2rem;
+  }
+}
