@@ -11,9 +11,27 @@ import ProgressBar from "../components/ProgressBar";
 import NoticeBoard from "../components/NoticeBoard";
 
 import style from "../styles/Home.module.scss";
-import 'antd/dist/reset.css';
+import "antd/dist/reset.css";
+import { useEffect, useState } from "react";
+import logo from "../assets/logo/logo2.png";
+import active_logo from "../assets/logo/logo3.png";
+import icon_bnb from "../assets/icon/BNB.svg";
+import Image from "next/image";
+import { COUNTDOWN } from "../constants";
 
 const Home: NextPage = () => {
+  // page load
+  const [domLoaded, setDomLoaded] = useState(false);
+  // countdown
+  const [onFinish, setOnFinish] = useState(false);
+
+  useEffect(() => {
+    setDomLoaded(true);
+    if (Date.now() >= COUNTDOWN.deadline) {
+      setOnFinish(true);
+    }
+  }, []);
+
   return (
     <>
       <Head>
@@ -25,33 +43,51 @@ const Home: NextPage = () => {
         <link href="/logo.png" rel="icon" />
       </Head>
 
-      <div className={style.App}>
-        <div className={style.container}>
-          <header>
-            <HeaderNav />
-          </header>
-          <main className={style.main_content}>
-            <section className={style.page_content}>
-              <div className={style.part_left}>
-                <ArticleSection />
-                <SocialUrlList />
-                <TokenInfoList />
-              </div>
-              <div className={style.part_right}>
-                <div className={style.part_right_top}>
-                  <div className={style.row_icon}></div>
-                  <Countdown />
-                  <ProgressBar />
+      {domLoaded && (
+        <div className={style.App}>
+          <div className={style.container}>
+            <header>
+              <HeaderNav />
+            </header>
+            <main className={style.main_content}>
+              <section className={style.page_content}>
+                <div className={style.part_left}>
+                  <ArticleSection />
+                  <SocialUrlList />
+                  <TokenInfoList />
                 </div>
-                <div className={style.part_right_bottom}>
-                  <SwapInput />
-                  <NoticeBoard />
+                <div className={style.part_right}>
+                  <div className={style.part_right_top}>
+                    <div className={style.row_icon}>
+                      <Image src={logo} alt="logo" />
+                      <Image src={icon_bnb} alt="icon_bnb" />
+                    </div>
+                    <div className={style.part_right_top_content}>
+                      {onFinish ? (
+                        <>
+                          <div className={style.row_icon_active}>
+                            <Image src={active_logo} alt="logo" />
+                          </div>
+                          <ProgressBar />
+                        </>
+                      ) : (
+                        <>
+                          <Countdown />
+                          <ProgressBar />
+                        </>
+                      )}
+                    </div>
+                  </div>
+                  <div className={style.part_right_bottom}>
+                    <SwapInput />
+                    <NoticeBoard />
+                  </div>
                 </div>
-              </div>
-            </section>
-          </main>
+              </section>
+            </main>
+          </div>
         </div>
-      </div>
+      )}
     </>
   );
 };

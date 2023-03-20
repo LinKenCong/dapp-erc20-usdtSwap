@@ -37,12 +37,26 @@
   padding: 2rem;
 }
 .part_right {
-  background-color: #3b3b3b;
   color: #fff;
   min-width: 35%;
+  background-color: #2c2c2c;
   .part_right_top {
-    padding: 2rem;
+    background-color: #3b3b3b;
     border-bottom: 1px solid #eee;
+    padding: 1rem;
+    .row_icon {
+      display: flex;
+      justify-content: space-between;
+    }
+    .row_icon_active{
+      padding-top: 1.5rem;
+      display: flex;
+      justify-content: center;
+    }
+    .part_right_top_content {
+      padding: 1rem;
+      padding-top: 0;
+    }
   }
   .part_right_bottom {
     padding: 2rem;

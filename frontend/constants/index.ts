@@ -1,5 +1,9 @@
 import ABI_ERC20 from "./abi/ERC20.json";
 
+export const COUNTDOWN = {
+  deadline: 1680190038000, // UTC
+};
+
 export const ABI = {
   ERC20: ABI_ERC20,
 };

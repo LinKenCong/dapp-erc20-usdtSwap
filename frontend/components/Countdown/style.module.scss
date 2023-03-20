@@ -1,0 +1,21 @@
+.Countdown {
+  display: flex;
+  flex-direction: column;
+  .text_content {
+    display: flex;
+    justify-content: center;
+    padding: 1rem 0;
+    text-align: center;
+    .text_time {
+      > div {
+        font-size: 0.7rem;
+        font-weight: 800;
+        color: #fff !important;
+      }
+      span {
+        color: #fff;
+        font-size: 1.2rem;
+      }
+    }
+  }
+}

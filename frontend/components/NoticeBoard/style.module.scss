@@ -1,0 +1,20 @@
+.NoticeBoard {
+  h5 {
+    font-size: 0.8rem;
+    color: #fff;
+    font-weight: 800;
+    margin: 0;
+    display: block;
+    padding-bottom: 0.5rem;
+  }
+  .noticItem {
+    font-size: 0.7rem;
+    color: #999999;
+
+    .noticItem_text {
+    }
+    .noticItem_time {
+      font-size: 0.6rem;
+    }
+  }
+}
