@@ -2,8 +2,11 @@
 pragma solidity ^0.8.19;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 
 contract SwapToken {
+    using SafeMath for uint256;
+
     struct Wallet {
         address account;
         uint256 maxSwap;
@@ -16,7 +19,7 @@ contract SwapToken {
     // USDT
     IERC20 public immutable USDT;
     // Swap wallet address
-    Wallet[6] public wallets;
+    Wallet[] public wallets;
     // Current wallet index
     uint8 public walletIndex;
     // Total Swap Tokens
@@ -35,19 +38,21 @@ contract SwapToken {
         unlocked = 1;
     }
 
-    constructor(address _token, address _usdt) {
+    constructor(
+        address _token,
+        address _usdt,
+        address _payee,
+        address[6] memory _wallets,
+        uint256[6] memory _maxSwap,
+        uint256[6] memory _price
+    ) {
         TOKEN = IERC20(_token);
         USDT = IERC20(_usdt);
-        payee = address(this);
-    }
+        payee = _payee;
 
-    // Initialize wallet information
-    function initWallet(address[6] memory _wallet, uint256[6] memory _maxSwap, uint256[6] memory _price) external {
-        require(wallets[0].account == address(0), "Wallet initialized.");
-        for (uint256 i = 0; i < _wallet.length; i++) {
-            wallets[i].account = _wallet[i];
-            wallets[i].maxSwap = _maxSwap[i];
-            wallets[i].price = _price[i];
+        for (uint256 i = 0; i < _wallets.length; i++) {
+            require(_wallets[i] != address(0), "Wallet address cannot be zero");
+            wallets.push(Wallet({account: _wallets[i], maxSwap: _maxSwap[i], price: _price[i]}));
         }
     }
 
@@ -69,20 +74,30 @@ contract SwapToken {
 
     // Calculate the number of convertible tokens
     function getTokenOut(uint8 _index, uint256 usdtIn) public view returns (uint256) {
-        return ((usdtIn * 10 ** 18) / getWalletPrice(_index));
+        uint256 price = wallets[_index].price;
+        require(price > 0, "Wallet price cannot be zero");
+        return usdtIn.mul(10 ** 18).div(price);
     }
 
     // Calculate the current wallet convertible balance
     function purchasableTokens(uint8 _index) public view returns (uint256) {
-        return getWalletMaxSwap(_index) - swapToken[_index];
+        uint256 maxSwap = wallets[_index].maxSwap;
+        require(maxSwap > 0, "Wallet maxSwap cannot be zero");
+        uint256 swapped = swapToken[_index];
+        if (swapped >= maxSwap) {
+            return 0;
+        }
+        return maxSwap.sub(swapped);
     }
 
     // Swap USDT to Token
     function swap(uint256 usdtIn) external lock {
+        require(msg.sender != address(0), "Sender address cannot be zero");
+        require(USDT.balanceOf(msg.sender) >= usdtIn, "Insufficient usdt balance");
         require(usdtIn > 0, "Cannot be zero.");
         // get new wallet index
         if (purchasableTokens(walletIndex) == 0) {
-            require(walletIndex + 1 < 6, "Already the last one");
+            require(walletIndex <= wallets.length, "Already the last one");
             walletIndex++;
         }
         // get swap token amount
