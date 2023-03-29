@@ -7,4 +7,9 @@ export interface ContractInfo {
   walletMaxSwap: BigNumber;
   walletSwapOf: BigNumber;
   allowance: BigNumber;
-};
+}
+export interface ContractList {
+  swaptoken: `0x${string}`;
+  usdt: `0x${string}`;
+  zro: `0x${string}`;
+}

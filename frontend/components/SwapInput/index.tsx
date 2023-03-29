@@ -1,16 +1,17 @@
 import style from "./style.module.scss";
-import { useContractWrite, usePrepareContractWrite } from "wagmi";
+import { useChainId, useContractWrite, usePrepareContractWrite } from "wagmi";
 import { Input, Divider, Button, notification } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 import {
   ABI,
-  CURRENT_CONTRACT_SWAPTOKEN,
-  CURRENT_CONTRACT_USDT,
+  CONTRACT_SWAPTOKEN_MAP,
+  CONTRACT_USDT_MAP,
+  SupportedChainId,
 } from "../../constants";
-import { ContractInfo } from "../../constants/type";
+import { ContractInfo, ContractList } from "../../constants/type";
 import { useEffect, useState } from "react";
 import { fromEth, toEth, formatToNumber, countPrice } from "../../utils";
-import { BigNumber } from "ethers";
+import { BigNumber, ethers } from "ethers";
 import NetwrokLoading from "../NetwrokLoading";
 
 // antd
@@ -20,29 +21,27 @@ const loadIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
 // notification
 const placement = "top";
 
-const SwapTokenContractAddress = CURRENT_CONTRACT_SWAPTOKEN;
-const USDTContractAddress = CURRENT_CONTRACT_USDT;
-
-const SwapInput = (props: { contractInfo: ContractInfo }) => {
-  const { contractInfo } = props;
-
+const SwapInput = (props: {
+  contractInfo: ContractInfo;
+  contractList: ContractList;
+}) => {
+  const { contractInfo, contractList } = props;
   const [amount, setAmount] = useState(BigNumber.from(0));
   // max
   const onMax = (value: string) => {
     setAmount(contractInfo.purchasable);
   };
-
   // btn
   const [btnActive, setBtnActive] = useState(true);
   const [api, contextHolder] = notification.useNotification();
 
   // approveUSDTHandle
   const approveConfig = usePrepareContractWrite({
-    address: USDTContractAddress,
+    address: contractList.usdt,
     abi: ABI.ERC20,
     functionName: "approve",
     args: [
-      SwapTokenContractAddress,
+      contractList.swaptoken,
       countPrice(amount, contractInfo.walletPrice),
     ],
     enabled: !amount.eq(0),
@@ -83,7 +82,7 @@ const SwapInput = (props: { contractInfo: ContractInfo }) => {
 
   // swapTokenHandle
   const swapTokenConfig = usePrepareContractWrite({
-    address: SwapTokenContractAddress,
+    address: contractList.swaptoken,
     abi: ABI.SwapToken,
     functionName: "swap",
     args: [countPrice(amount, contractInfo.walletPrice)],

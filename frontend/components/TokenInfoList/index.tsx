@@ -1,17 +1,19 @@
 import { Descriptions } from "antd";
 import style from "./style.module.scss";
-import { CURRENT_CONTRACT, TOKEN_INFO_MAP } from "../../constants";
-import { ContractInfo } from "../../constants/type";
+import { TOKEN_INFO_MAP } from "../../constants";
+import { ContractInfo, ContractList } from "../../constants/type";
 
 const SwapToken = {
-  address: CURRENT_CONTRACT.swaptoken,
-  ...TOKEN_INFO_MAP.swapToken,
+  ...TOKEN_INFO_MAP.ZRO,
 };
 
 const ItemStyle_Address = { color: "#F7D358" };
 
-const TokenInfoList = (props: { contractInfo: ContractInfo }) => {
-  const { contractInfo } = props;
+const TokenInfoList = (props: {
+  contractInfo: ContractInfo;
+  contractList: ContractList;
+}) => {
+  const { contractInfo, contractList } = props;
 
   return (
     <>
@@ -40,7 +42,7 @@ const TokenInfoList = (props: { contractInfo: ContractInfo }) => {
             {SwapToken.decimals}
           </Descriptions.Item>
           <Descriptions.Item label="代币地址" contentStyle={ItemStyle_Address}>
-            {SwapToken.address}
+            {contractList.zro}
           </Descriptions.Item>
         </Descriptions>
       </div>

@@ -19,15 +19,21 @@ import icon_bnb from "../assets/icon/BNB.svg";
 import Image from "next/image";
 import { COUNTDOWN } from "../constants";
 
-import { useAccount, useContractRead, useContractReads,useChainId } from "wagmi";
+import {
+  useAccount,
+  useContractRead,
+  useContractReads,
+  useChainId,
+} from "wagmi";
 import {
   ABI,
-  CURRENT_CONTRACT_SWAPTOKEN,
-  CURRENT_CONTRACT_USDT,
-  TOKEN_INFO_MAP,
+  CONTRACT_SWAPTOKEN_MAP,
+  CONTRACT_USDT_MAP,
+  CONTRACT_ZRO_MAP,
+  SupportedChainId,
 } from "../constants";
-import { ContractInfo } from "../constants/type";
-import { BigNumber } from "ethers";
+import { ContractInfo, ContractList } from "../constants/type";
+import { BigNumber, ethers } from "ethers";
 
 const Home: NextPage = () => {
   // page load
@@ -43,15 +49,20 @@ const Home: NextPage = () => {
   }, []);
 
   // chain
-  const chainId = useChainId()
+  const reqChainId = useChainId();
+  const chainId: SupportedChainId = reqChainId;
   const { address, isConnecting, isDisconnected } = useAccount();
-  const SwapTokenContractAddress = CURRENT_CONTRACT_SWAPTOKEN;
-  const USDTContractAddress = CURRENT_CONTRACT_USDT;
+  const baseContractList: ContractList = {
+    swaptoken: ethers.utils.getAddress(CONTRACT_SWAPTOKEN_MAP[chainId]),
+    usdt: ethers.utils.getAddress(CONTRACT_USDT_MAP[chainId]),
+    zro: ethers.utils.getAddress(CONTRACT_ZRO_MAP[chainId]),
+  };
+  const [contractList, setContractList] = useState(baseContractList);
 
   // reads contract
   const [walletIndex, setWalletIndex] = useState(0);
   const contract_walletIndex = useContractRead({
-    address: SwapTokenContractAddress,
+    address: contractList.swaptoken,
     abi: ABI.SwapToken,
     functionName: "walletIndex",
     watch: true,
@@ -66,40 +77,40 @@ const Home: NextPage = () => {
   const contract_reads = useContractReads({
     contracts: [
       {
-        address: SwapTokenContractAddress,
+        address: contractList.swaptoken,
         abi: ABI.SwapToken,
         functionName: "getWalletAccout",
         args: [contract_walletIndex.data],
       },
       {
-        address: SwapTokenContractAddress,
+        address: contractList.swaptoken,
         abi: ABI.SwapToken,
         functionName: "purchasableTokens",
         args: [walletIndex],
       },
       {
-        address: SwapTokenContractAddress,
+        address: contractList.swaptoken,
         abi: ABI.SwapToken,
         functionName: "getWalletPrice",
         args: [walletIndex],
       },
       {
-        address: SwapTokenContractAddress,
+        address: contractList.swaptoken,
         abi: ABI.SwapToken,
         functionName: "getWalletMaxSwap",
         args: [contract_walletIndex.data],
       },
       {
-        address: SwapTokenContractAddress,
+        address: contractList.swaptoken,
         abi: ABI.SwapToken,
         functionName: "getWalletSwapOf",
         args: [walletIndex, address],
       },
       {
-        address: USDTContractAddress,
+        address: contractList.usdt,
         abi: ABI.ERC20,
         functionName: "allowance",
-        args: [address, SwapTokenContractAddress],
+        args: [address, contractList.swaptoken],
       },
     ],
     watch: true,
@@ -119,6 +130,7 @@ const Home: NextPage = () => {
   useEffect(() => {
     if (contract_reads.isSuccess && contract_reads.data) {
       const req = contract_reads.data.map((item: any) => String(item));
+      console.log({ req });
       let newInfo: ContractInfo = baseContractInfo;
       newInfo.walletIndex = walletIndex;
       newInfo.walletAccount = req[0];
@@ -153,7 +165,10 @@ const Home: NextPage = () => {
                 <div className={style.part_left}>
                   <ArticleSection />
                   <SocialUrlList />
-                  <TokenInfoList contractInfo={contractInfo} />
+                  <TokenInfoList
+                    contractInfo={contractInfo}
+                    contractList={contractList}
+                  />
                 </div>
                 <div className={style.part_right}>
                   <div className={style.part_right_top}>
@@ -177,7 +192,10 @@ const Home: NextPage = () => {
                     </div>
                   </div>
                   <div className={style.part_right_bottom}>
-                    <SwapInput contractInfo={contractInfo} />
+                    <SwapInput
+                      contractInfo={contractInfo}
+                      contractList={contractList}
+                    />
                     <NoticeBoard />
                   </div>
                 </div>

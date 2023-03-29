@@ -7,7 +7,7 @@ import { ContractInfo } from "../../constants/type";
 
 const ProgressBar = (props: { contractInfo: ContractInfo }) => {
   const { contractInfo } = props;
-  const TokenSymbol = TOKEN_INFO_MAP.swapToken.symbol;
+  const TokenSymbol = TOKEN_INFO_MAP.ZRO.symbol;
 
   const [maxToken, setMaxToken] = useState("0");
   const [sellToken, setSellToken] = useState("0");
