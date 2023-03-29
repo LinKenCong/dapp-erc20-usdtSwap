@@ -22,13 +22,17 @@ contract SwapToken {
     Wallet[] public wallets;
     // Current wallet index
     uint8 public walletIndex;
+    // Total Swap Accounts
+    uint8 public totalSwapAccounts;
     // Total Swap Tokens
     uint256 public totalSwapToken;
     // All accounts per wallet
-    mapping(uint8 => address[]) public swapAccounts;
+    mapping(uint8 => uint8) public swapAccounts;
     // Amount of tokens exchanged per wallet
     mapping(uint8 => uint256) public swapToken;
     mapping(uint8 => mapping(address => uint256)) private _swapAccountToken;
+    // Total Swap Token Of account
+    mapping(address => uint256) public totalSwapOf;
 
     uint8 private unlocked = 1;
     modifier lock() {
@@ -107,16 +111,20 @@ contract SwapToken {
         // pay usdt to payee
         USDT.transferFrom(msg.sender, payee, usdtIn);
         // update contract status
+        if (totalSwapOf[msg.sender] == 0) {
+            totalSwapAccounts++;
+        }
         if (_swapAccountToken[walletIndex][msg.sender] == 0) {
-            swapAccounts[walletIndex].push(msg.sender);
+            swapAccounts[walletIndex]++;
         }
         totalSwapToken += _tokenOut;
+        totalSwapOf[msg.sender] += _tokenOut;
         swapToken[walletIndex] += _tokenOut;
         _swapAccountToken[walletIndex][msg.sender] += _tokenOut;
         // get new wallet index
         uint256 _purchasable = purchasableTokens(walletIndex);
         require(_purchasable == 0 || _purchasable >= _wallet.price, "Surplus cannot be less than price.");
-        if (_purchasable == 0 && walletIndex < wallets.length) {
+        if (_purchasable == 0 && walletIndex < wallets.length - 1) {
             walletIndex++;
         }
         // transfer token to buyer
