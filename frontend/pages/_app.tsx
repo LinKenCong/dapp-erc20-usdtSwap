@@ -7,15 +7,16 @@ import { bsc, bscTestnet } from "wagmi/chains";
 import { publicProvider } from "wagmi/providers/public";
 
 const { chains, provider, webSocketProvider } = configureChains(
-  [
-    bsc,
-    ...(process.env.NEXT_PUBLIC_ENABLE_TESTNETS === "true" ? [bscTestnet] : []),
-  ],
+  // [
+  //   bsc,
+  //   ...(process.env.NEXT_PUBLIC_ENABLE_TESTNETS === "true" ? [bscTestnet] : []),
+  // ],
+  [bscTestnet],
   [publicProvider()]
 );
 
 const { connectors } = getDefaultWallets({
-  appName: "RainbowKit App",
+  appName: "USDT SWAP App",
   chains,
 });
 
