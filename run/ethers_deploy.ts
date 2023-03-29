@@ -7,9 +7,9 @@ const privateKey = process.env.PRIVATE_KEY_TEST;
 const rpc = process.env.ETH_NODE_URI_BSC_TEST;
 
 const CONTRACT_MAP = {
-  ZRO: "0x9aFD97421F80D750F5350916db04Cb7D79aaBAD7",
+  ZRO: "0xfD69a1aAE97A910f134Dc01BC53F8a02183fa321",
   USDT: "0x70AF9f834E448C1a115Ea98cc151A315e6538248",
-  SWAPTOKEN: "0x8d2eA84191b5484fF4d550ECCF5a5E3E3351cc6C",
+  SWAPTOKEN: "0xCaA05157d50d473FC0d48c5199Bd353Ee3b5F3Bf",
 };
 
 const WALLETS_ADDRESS = [
@@ -214,18 +214,18 @@ const main = async () => {
   // );
 
   // step.4
-  // await mintTokenHandle(
-  //   CONTRACT_MAP.ZRO,
-  //   TEST_WALLETS_POOL_INFO.map((item: any) => item.totalSupply),
-  //   WALLETS_ADDRESS
-  // );
-  // await sendGasHandle("0.001", WALLETS_ADDRESS);
-  // await approveTokenHandle(
-  //   CONTRACT_MAP.ZRO,
-  //   CONTRACT_MAP.SWAPTOKEN,
-  //   TEST_WALLETS_POOL_INFO.map((item: any) => item.totalSupply),
-  //   WALLETS_PRIVATE_KEY
-  // );
+  await mintTokenHandle(
+    CONTRACT_MAP.ZRO,
+    TEST_WALLETS_POOL_INFO.map((item: any) => item.totalSupply),
+    WALLETS_ADDRESS
+  );
+  await sendGasHandle("0.001", WALLETS_ADDRESS);
+  await approveTokenHandle(
+    CONTRACT_MAP.ZRO,
+    CONTRACT_MAP.SWAPTOKEN,
+    TEST_WALLETS_POOL_INFO.map((item: any) => item.totalSupply),
+    WALLETS_PRIVATE_KEY
+  );
 };
 main().catch((error) => {
   console.error(error);

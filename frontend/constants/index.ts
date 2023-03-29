@@ -17,7 +17,7 @@ export enum SupportedChainId {
 
 export const CONTRACT_SWAPTOKEN_MAP = {
   [SupportedChainId.BSC]: "0x43b27367EB8c5A2c25134cB2E40Cee765C2Edb39", //no
-  [SupportedChainId.BSC_TESTNET]: "0x753B42955099852CB94dAb197EB59bA2809eF90B",
+  [SupportedChainId.BSC_TESTNET]: "0xCaA05157d50d473FC0d48c5199Bd353Ee3b5F3Bf",
 };
 
 export const CONTRACT_USDT_MAP = {
@@ -27,7 +27,7 @@ export const CONTRACT_USDT_MAP = {
 
 export const CONTRACT_ZRO_MAP = {
   [SupportedChainId.BSC]: "0xC1A6e4D1d81Ce56a6527460F6c1bA03Ce8fbe2EC", //no
-  [SupportedChainId.BSC_TESTNET]: "0x8672239c3C452E523899Ac0A6c62524c3d00A169",
+  [SupportedChainId.BSC_TESTNET]: "0xfD69a1aAE97A910f134Dc01BC53F8a02183fa321",
 };
 
 export const TOKEN_INFO_MAP = {
