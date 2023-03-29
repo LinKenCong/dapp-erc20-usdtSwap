@@ -28,31 +28,36 @@
         color: #3b3b3b;
       }
     }
-    .item_btn {
+    .item_btn,
+    .item_btn_tx {
       font-size: 0.9rem;
       margin-top: 1rem;
-      background-color: #facc2e;
-      color: #fff;
     }
-    .item_btn:hover {
-      background-color: #e3b82d;
+    .item_btn_tx {
+      color: #fff;
+      background-color: #facc2e;
+    }
+    .item_btn_tx:hover {
       border-color: #3b3b3b;
       color: #3b3b3b;
+      background-color: #e3b82d;
     }
     .info_table {
       padding-top: 0.6rem;
       font-size: 0.7rem;
-      >div {
+      > div {
         width: 100%;
         display: flex;
         flex-direction: column;
-        tr {
-          display: flex;
-          td:last-child {
-            flex: 1;
-            text-align: right;
-            color: #facc2e;
-          }
+      }
+    }
+    .info_tbody {
+      tr {
+        display: flex;
+        td:last-child {
+          flex: 1;
+          text-align: right;
+          color: #facc2e;
         }
       }
     }
