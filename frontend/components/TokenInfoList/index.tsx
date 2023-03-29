@@ -1,7 +1,16 @@
 import type { NextComponentType } from "next";
 import { Descriptions } from "antd";
+import { useEffect, useState } from "react";
 import style from "./style.module.scss";
-import { CURRENT_CONTRACT, TOKEN_INFO_MAP } from "../../constants";
+import {
+  CURRENT_CONTRACT,
+  TOKEN_INFO_MAP,
+  ABI,
+  CURRENT_CONTRACT_SWAPTOKEN,
+} from "../../constants";
+import { useAccount, useContractRead, useContractReads } from "wagmi";
+import { fromEth } from "../../utils";
+import { BigNumber } from "ethers";
 
 const SwapToken = {
   address: CURRENT_CONTRACT.swaptoken,
@@ -9,8 +18,37 @@ const SwapToken = {
 };
 
 const ItemStyle_Address = { color: "#F7D358" };
+const SwapTokenContractAddress = CURRENT_CONTRACT_SWAPTOKEN;
 
 const TokenInfoList: NextComponentType = () => {
+  const { address, isConnecting, isDisconnected } = useAccount();
+  const contract_walletIndex = useContractRead({
+    address: SwapTokenContractAddress,
+    abi: ABI.SwapToken,
+    functionName: "walletIndex",
+    watch: true,
+  });
+  const contract_reads = useContractReads({
+    contracts: [
+      {
+        address: SwapTokenContractAddress,
+        abi: ABI.SwapToken,
+        functionName: "getWalletAccout",
+        args: [contract_walletIndex.data],
+      },
+    ],
+    watch: true,
+  });
+
+  const [poolAddress, setPoolAddress] = useState(
+    "0x000000000000000000000000000000000000test"
+  );
+  useEffect(() => {
+    if (contract_reads.data) {
+      setPoolAddress(String(contract_reads.data[0]));
+    }
+  }, [contract_reads.data]);
+
   return (
     <>
       <div className={style.TokenInfoList}>
@@ -26,7 +64,7 @@ const TokenInfoList: NextComponentType = () => {
           contentStyle={{ textAlign: "right" }}
         >
           <Descriptions.Item label="预售地址" contentStyle={ItemStyle_Address}>
-            0x000000000000000000000000000000000000test
+            {poolAddress}
           </Descriptions.Item>
           <Descriptions.Item label="代币名称">
             {SwapToken.name}
