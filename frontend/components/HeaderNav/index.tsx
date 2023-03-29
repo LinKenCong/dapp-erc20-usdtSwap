@@ -14,9 +14,9 @@ const HeaderNav: NextComponentType = () => {
           <Image src={icon_logo} alt="logo" />
         </div>
         <div className={style.btn_list}>
-          <button>
+          {/* <button>
             <Image src={icon_language} alt="language" />
-          </button>
+          </button> */}
           <ConnectButton chainStatus="icon" />
         </div>
       </div>
