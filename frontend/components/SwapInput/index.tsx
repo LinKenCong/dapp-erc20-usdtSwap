@@ -1,13 +1,8 @@
 import style from "./style.module.scss";
-import { useChainId, useContractWrite, usePrepareContractWrite } from "wagmi";
+import { useContractWrite, usePrepareContractWrite } from "wagmi";
 import { Input, Divider, Button, notification } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
-import {
-  ABI,
-  CONTRACT_SWAPTOKEN_MAP,
-  CONTRACT_USDT_MAP,
-  SupportedChainId,
-} from "../../constants";
+import { ABI } from "../../constants";
 import { ContractInfo, ContractList } from "../../constants/type";
 import { useEffect, useState } from "react";
 import { fromEth, toEth, formatToNumber, countPrice } from "../../utils";
@@ -29,11 +24,33 @@ const SwapInput = (props: {
   const [amount, setAmount] = useState(BigNumber.from(0));
   // max
   const onMax = (value: string) => {
-    setAmount(contractInfo.purchasable);
+    const usdtIn = countPrice(
+      contractInfo.purchasable,
+      contractInfo.walletPrice
+    );
+    const decimals = BigNumber.from(10).pow(18);
+    const balanceBuyCount = Number(
+      fromEth(
+        contractInfo.usdtBalance.div(contractInfo.walletPrice).mul(decimals)
+      )
+    ).toFixed(2);
+    const maxAmount = contractInfo.usdtBalance.gte(usdtIn)
+      ? contractInfo.purchasable
+      : toEth(balanceBuyCount);
+    setAmount(maxAmount);
   };
   // btn
   const [btnActive, setBtnActive] = useState(true);
   const [api, contextHolder] = notification.useNotification();
+
+  const verified = (): boolean => {
+    const usdtIn = countPrice(amount, contractInfo.walletPrice);
+    return (
+      !amount.eq(0) &&
+      contractInfo.allowance.gte(usdtIn) &&
+      contractInfo.usdtBalance.gte(usdtIn)
+    );
+  };
 
   // approveUSDTHandle
   const approveConfig = usePrepareContractWrite({
@@ -86,12 +103,19 @@ const SwapInput = (props: {
     abi: ABI.SwapToken,
     functionName: "swap",
     args: [countPrice(amount, contractInfo.walletPrice)],
-    enabled:
-      !amount.eq(0) &&
-      contractInfo.allowance.gte(countPrice(amount, contractInfo.walletPrice)),
+    enabled: verified(),
   });
   const swapTokenContract = useContractWrite(swapTokenConfig.config);
   const swapTokenHandle = async () => {
+    if (amount.eq(0)) return;
+    if (!verified()) {
+      return api.error({
+        message: `Params Error`,
+        description: `Check You Token Balance.`,
+        placement,
+        duration: null,
+      });
+    }
     setBtnActive(false);
     try {
       api.open({
@@ -136,6 +160,17 @@ const SwapInput = (props: {
           style={{ backgroundColor: "#fff" }}
         >
           {loadIcon}
+        </Button>
+      );
+    } else if (contractInfo.purchasable.eq(0)) {
+      return (
+        <Button
+          disabled
+          size="large"
+          className={style.item_btn}
+          style={{ backgroundColor: "#fff" }}
+        >
+          Sold out
         </Button>
       );
     } else {
@@ -204,19 +239,19 @@ const SwapInput = (props: {
             <table className={style.info_table}>
               <tbody className={style.info_tbody}>
                 <tr>
-                  <td>Current Rat</td>
+                  <td>当前价格</td>
                   <td>{`1 ZRO = ${formatToNumber(
                     contractInfo.walletPrice
                   )} USDT`}</td>
                 </tr>
                 <tr>
                   <td>贡献者总数</td>
-                  <td>0</td>
+                  <td>{contractInfo.totalSwapAccounts.toNumber()}</td>
                 </tr>
                 <tr>
                   <td>您购买的</td>
                   <td>
-                    {formatToNumber(contractInfo.walletSwapOf).toFixed(2)} ZRO
+                    {formatToNumber(contractInfo.totalSwapOf).toFixed(2)} ZRO
                   </td>
                 </tr>
               </tbody>

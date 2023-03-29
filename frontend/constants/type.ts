@@ -6,7 +6,10 @@ export interface ContractInfo {
   walletPrice: BigNumber;
   walletMaxSwap: BigNumber;
   walletSwapOf: BigNumber;
+  totalSwapOf: BigNumber;
+  totalSwapAccounts: BigNumber;
   allowance: BigNumber;
+  usdtBalance: BigNumber;
 }
 export interface ContractList {
   swaptoken: `0x${string}`;

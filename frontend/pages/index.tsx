@@ -112,9 +112,27 @@ const Home: NextPage = () => {
         functionName: "allowance",
         args: [address, contractList.swaptoken],
       },
+      {
+        address: contractList.swaptoken,
+        abi: ABI.SwapToken,
+        functionName: "totalSwapAccounts",
+        args: [],
+      },
+      {
+        address: contractList.swaptoken,
+        abi: ABI.SwapToken,
+        functionName: "totalSwapOf",
+        args: [address],
+      },
+      {
+        address: contractList.usdt,
+        abi: ABI.ERC20,
+        functionName: "balanceOf",
+        args: [address],
+      },
     ],
     watch: true,
-    enabled: !!walletIndex,
+    enabled: typeof walletIndex == "number",
   });
   const baseContractInfo: ContractInfo = {
     walletIndex: 0,
@@ -123,14 +141,22 @@ const Home: NextPage = () => {
     walletPrice: BigNumber.from(0),
     walletMaxSwap: BigNumber.from(0),
     walletSwapOf: BigNumber.from(0),
+    totalSwapOf: BigNumber.from(0),
+    totalSwapAccounts: BigNumber.from(0),
     allowance: BigNumber.from(0),
+    usdtBalance: BigNumber.from(0),
   };
   const [contractInfo, setContractInfo] = useState(baseContractInfo);
-  const formatToBN = (v: any) => BigNumber.from(v);
+  const formatToBN = (v: any) => {
+    try {
+      return BigNumber.from(v);
+    } catch (error) {
+      return BigNumber.from(0);
+    }
+  };
   useEffect(() => {
     if (contract_reads.isSuccess && contract_reads.data) {
       const req = contract_reads.data.map((item: any) => String(item));
-      console.log({ req });
       let newInfo: ContractInfo = baseContractInfo;
       newInfo.walletIndex = walletIndex;
       newInfo.walletAccount = req[0];
@@ -139,6 +165,9 @@ const Home: NextPage = () => {
       newInfo.walletMaxSwap = formatToBN(req[3]);
       newInfo.walletSwapOf = formatToBN(req[4]);
       newInfo.allowance = formatToBN(req[5]);
+      newInfo.totalSwapAccounts = formatToBN(req[6]);
+      newInfo.totalSwapOf = formatToBN(req[7]);
+      newInfo.usdtBalance = formatToBN(req[8]);
       setContractInfo({ ...newInfo });
     }
   }, [contract_reads.data]);
