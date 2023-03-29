@@ -2,7 +2,7 @@ import ABI_ERC20 from "./abi/ERC20.json";
 import ABI_SwapToken from "./abi/SwapToken.json";
 
 export const COUNTDOWN = {
-  deadline: 1680190038000, // UTC
+  deadline: 1670190038000, // UTC
 };
 
 export const ABI = {

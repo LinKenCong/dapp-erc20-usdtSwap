@@ -19,6 +19,16 @@ import icon_bnb from "../assets/icon/BNB.svg";
 import Image from "next/image";
 import { COUNTDOWN } from "../constants";
 
+import { useAccount, useContractRead, useContractReads,useChainId } from "wagmi";
+import {
+  ABI,
+  CURRENT_CONTRACT_SWAPTOKEN,
+  CURRENT_CONTRACT_USDT,
+  TOKEN_INFO_MAP,
+} from "../constants";
+import { ContractInfo } from "../constants/type";
+import { BigNumber } from "ethers";
+
 const Home: NextPage = () => {
   // page load
   const [domLoaded, setDomLoaded] = useState(false);
@@ -31,6 +41,95 @@ const Home: NextPage = () => {
       setOnFinish(true);
     }
   }, []);
+
+  // chain
+  const chainId = useChainId()
+  const { address, isConnecting, isDisconnected } = useAccount();
+  const SwapTokenContractAddress = CURRENT_CONTRACT_SWAPTOKEN;
+  const USDTContractAddress = CURRENT_CONTRACT_USDT;
+
+  // reads contract
+  const [walletIndex, setWalletIndex] = useState(0);
+  const contract_walletIndex = useContractRead({
+    address: SwapTokenContractAddress,
+    abi: ABI.SwapToken,
+    functionName: "walletIndex",
+    watch: true,
+  });
+  useEffect(() => {
+    // reads contract
+    if (typeof contract_walletIndex.data == "number") {
+      setWalletIndex(contract_walletIndex.data);
+    }
+  }, [contract_walletIndex.data]);
+
+  const contract_reads = useContractReads({
+    contracts: [
+      {
+        address: SwapTokenContractAddress,
+        abi: ABI.SwapToken,
+        functionName: "getWalletAccout",
+        args: [contract_walletIndex.data],
+      },
+      {
+        address: SwapTokenContractAddress,
+        abi: ABI.SwapToken,
+        functionName: "purchasableTokens",
+        args: [walletIndex],
+      },
+      {
+        address: SwapTokenContractAddress,
+        abi: ABI.SwapToken,
+        functionName: "getWalletPrice",
+        args: [walletIndex],
+      },
+      {
+        address: SwapTokenContractAddress,
+        abi: ABI.SwapToken,
+        functionName: "getWalletMaxSwap",
+        args: [contract_walletIndex.data],
+      },
+      {
+        address: SwapTokenContractAddress,
+        abi: ABI.SwapToken,
+        functionName: "getWalletSwapOf",
+        args: [walletIndex, address],
+      },
+      {
+        address: USDTContractAddress,
+        abi: ABI.ERC20,
+        functionName: "allowance",
+        args: [address, SwapTokenContractAddress],
+      },
+    ],
+    watch: true,
+    enabled: !!walletIndex,
+  });
+  const baseContractInfo: ContractInfo = {
+    walletIndex: 0,
+    walletAccount: "",
+    purchasable: BigNumber.from(0),
+    walletPrice: BigNumber.from(0),
+    walletMaxSwap: BigNumber.from(0),
+    walletSwapOf: BigNumber.from(0),
+    allowance: BigNumber.from(0),
+  };
+  const [contractInfo, setContractInfo] = useState(baseContractInfo);
+  const formatToBN = (v: any) => BigNumber.from(v);
+  useEffect(() => {
+    if (contract_reads.isSuccess && contract_reads.data) {
+      const req = contract_reads.data.map((item: any) => String(item));
+      let newInfo: ContractInfo = baseContractInfo;
+      newInfo.walletIndex = walletIndex;
+      newInfo.walletAccount = req[0];
+      newInfo.purchasable = formatToBN(req[1]);
+      newInfo.walletPrice = formatToBN(req[2]);
+      newInfo.walletMaxSwap = formatToBN(req[3]);
+      newInfo.walletSwapOf = formatToBN(req[4]);
+      newInfo.allowance = formatToBN(req[5]);
+      setContractInfo({ ...newInfo });
+    }
+  }, [contract_reads.data]);
 
   return (
     <>
@@ -54,7 +153,7 @@ const Home: NextPage = () => {
                 <div className={style.part_left}>
                   <ArticleSection />
                   <SocialUrlList />
-                  <TokenInfoList />
+                  <TokenInfoList contractInfo={contractInfo} />
                 </div>
                 <div className={style.part_right}>
                   <div className={style.part_right_top}>
@@ -68,18 +167,17 @@ const Home: NextPage = () => {
                           <div className={style.row_icon_active}>
                             <Image src={active_logo} alt="logo" />
                           </div>
-                          <ProgressBar />
+                          <ProgressBar contractInfo={contractInfo} />
                         </>
                       ) : (
                         <>
                           <Countdown />
-                          <ProgressBar />
                         </>
                       )}
                     </div>
                   </div>
                   <div className={style.part_right_bottom}>
-                    <SwapInput />
+                    <SwapInput contractInfo={contractInfo} />
                     <NoticeBoard />
                   </div>
                 </div>

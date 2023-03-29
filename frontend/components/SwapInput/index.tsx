@@ -1,21 +1,15 @@
-import { NextComponentType } from "next";
 import style from "./style.module.scss";
-import {
-  useAccount,
-  useContractRead,
-  useContractReads,
-  useContractWrite,
-  usePrepareContractWrite,
-} from "wagmi";
-import { Input, Divider, Button, notification, Alert } from "antd";
+import { useContractWrite, usePrepareContractWrite } from "wagmi";
+import { Input, Divider, Button, notification } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 import {
   ABI,
   CURRENT_CONTRACT_SWAPTOKEN,
   CURRENT_CONTRACT_USDT,
 } from "../../constants";
+import { ContractInfo } from "../../constants/type";
 import { useEffect, useState } from "react";
-import { fromEth, toEth } from "../../utils";
+import { fromEth, toEth, formatToNumber, countPrice } from "../../utils";
 import { BigNumber } from "ethers";
 import NetwrokLoading from "../NetwrokLoading";
 
@@ -29,70 +23,13 @@ const placement = "top";
 const SwapTokenContractAddress = CURRENT_CONTRACT_SWAPTOKEN;
 const USDTContractAddress = CURRENT_CONTRACT_USDT;
 
-const SwapInput: NextComponentType = () => {
-  const { address, isConnecting, isDisconnected } = useAccount();
-  const contract_walletIndex = useContractRead({
-    address: SwapTokenContractAddress,
-    abi: ABI.SwapToken,
-    functionName: "walletIndex",
-    watch: true,
-  });
-  const contract_reads = useContractReads({
-    contracts: [
-      {
-        address: SwapTokenContractAddress,
-        abi: ABI.SwapToken,
-        functionName: "purchasableTokens",
-        args: [contract_walletIndex.data],
-      },
-      {
-        address: SwapTokenContractAddress,
-        abi: ABI.SwapToken,
-        functionName: "getWalletPrice",
-        args: [contract_walletIndex.data],
-      },
-      {
-        address: SwapTokenContractAddress,
-        abi: ABI.SwapToken,
-        functionName: "getWalletSwapOf",
-        args: [contract_walletIndex.data, address],
-      },
-      {
-        address: USDTContractAddress,
-        abi: ABI.ERC20,
-        functionName: "allowance",
-        args: [address, SwapTokenContractAddress],
-      },
-    ],
-  });
+const SwapInput = (props: { contractInfo: ContractInfo }) => {
+  const { contractInfo } = props;
 
-  const basicBN = BigNumber.from(0);
-  const [amount, setAmount] = useState(basicBN);
-  const [sellToken, setSellToken] = useState(basicBN);
-  const [walletPrice, setWalletPrice] = useState(basicBN);
-  const [walletSwapOf, setWalletSwapOf] = useState(basicBN);
-  const [usdtAllowance, setUsdtAllowance] = useState(basicBN);
-  useEffect(() => {
-    if (contract_reads.data) {
-      setSellToken(BigNumber.from(contract_reads.data[0] || 0));
-      setWalletPrice(BigNumber.from(contract_reads.data[1] || 0));
-      setWalletSwapOf(BigNumber.from(contract_reads.data[2] || 0));
-      setUsdtAllowance(BigNumber.from(contract_reads.data[3] || 0));
-    }
-  }, [contract_reads.data]);
-
-  // eth math count
-  const formatToNumber = (value: BigNumber) => {
-    return Number(fromEth(String(value)));
-  };
-  const countPrice = (value: BigNumber) => {
-    const decimals = BigNumber.from(10).pow(18);
-    return value.mul(walletPrice).div(decimals);
-  };
-
+  const [amount, setAmount] = useState(BigNumber.from(0));
   // max
   const onMax = (value: string) => {
-    setAmount(sellToken);
+    setAmount(contractInfo.purchasable);
   };
 
   // btn
@@ -104,7 +41,10 @@ const SwapInput: NextComponentType = () => {
     address: USDTContractAddress,
     abi: ABI.ERC20,
     functionName: "approve",
-    args: [SwapTokenContractAddress, countPrice(amount)],
+    args: [
+      SwapTokenContractAddress,
+      countPrice(amount, contractInfo.walletPrice),
+    ],
     enabled: !amount.eq(0),
   });
   const approveContract = useContractWrite(approveConfig.config);
@@ -138,7 +78,6 @@ const SwapInput: NextComponentType = () => {
     } catch (error) {
       console.error("approveUSDTHandle", error);
     }
-    await contract_reads.refetch();
     setBtnActive(true);
   };
 
@@ -147,8 +86,10 @@ const SwapInput: NextComponentType = () => {
     address: SwapTokenContractAddress,
     abi: ABI.SwapToken,
     functionName: "swap",
-    args: [countPrice(amount)],
-    enabled: !amount.eq(0) && usdtAllowance.gte(countPrice(amount)),
+    args: [countPrice(amount, contractInfo.walletPrice)],
+    enabled:
+      !amount.eq(0) &&
+      contractInfo.allowance.gte(countPrice(amount, contractInfo.walletPrice)),
   });
   const swapTokenContract = useContractWrite(swapTokenConfig.config);
   const swapTokenHandle = async () => {
@@ -181,7 +122,6 @@ const SwapInput: NextComponentType = () => {
     } catch (error) {
       console.error("swapTokenHandle", error);
     }
-    await contract_reads.refetch();
     setBtnActive(true);
     setAmount(BigNumber.from(0));
   };
@@ -200,7 +140,9 @@ const SwapInput: NextComponentType = () => {
         </Button>
       );
     } else {
-      const isApprove: Boolean = usdtAllowance.gte(countPrice(amount));
+      const isApprove: Boolean = contractInfo.allowance.gte(
+        countPrice(amount, contractInfo.walletPrice)
+      );
       if (isApprove) {
         return (
           <Button
@@ -231,7 +173,7 @@ const SwapInput: NextComponentType = () => {
   return (
     <>
       {contextHolder}
-      {contract_reads.isSuccess ? (
+      {contractInfo ? (
         <div className={style.SwapInput}>
           <section className={style.SwapInput_section}>
             <h5>购买数量 {formatToNumber(amount)}</h5>
@@ -246,7 +188,9 @@ const SwapInput: NextComponentType = () => {
               onChange={(e: any) => {
                 const format = e.target.value.replace(/\-/g, "");
                 const value = toEth(Number(format).toFixed(2));
-                const amount = value.gt(sellToken) ? sellToken : value;
+                const amount = value.gt(contractInfo.purchasable)
+                  ? contractInfo.purchasable
+                  : value;
                 setAmount(amount);
               }}
               onSearch={onMax}
@@ -262,7 +206,9 @@ const SwapInput: NextComponentType = () => {
               <tbody className={style.info_tbody}>
                 <tr>
                   <td>Current Rat</td>
-                  <td>{`1 ZRO = ${formatToNumber(walletPrice)} USDT`}</td>
+                  <td>{`1 ZRO = ${formatToNumber(
+                    contractInfo.walletPrice
+                  )} USDT`}</td>
                 </tr>
                 <tr>
                   <td>贡献者总数</td>
@@ -270,7 +216,9 @@ const SwapInput: NextComponentType = () => {
                 </tr>
                 <tr>
                   <td>您购买的</td>
-                  <td>{formatToNumber(walletSwapOf).toFixed(2)} ZRO</td>
+                  <td>
+                    {formatToNumber(contractInfo.walletSwapOf).toFixed(2)} ZRO
+                  </td>
                 </tr>
               </tbody>
             </table>
