@@ -1,5 +1,5 @@
 {
-  "name": "frontend",
+  "name": "dapp-erc20-usdt-swap-frontend",
   "private": true,
   "version": "0.1.0",
   "scripts": {

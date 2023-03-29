@@ -1,5 +1,5 @@
 {
-  "name": "hardhat-deploy",
+  "name": "dapp-erc20-usdt-swap",
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
