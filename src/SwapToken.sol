@@ -95,11 +95,6 @@ contract SwapToken {
         require(msg.sender != address(0), "Sender address cannot be zero");
         require(USDT.balanceOf(msg.sender) >= usdtIn, "Insufficient usdt balance");
         require(usdtIn > 0, "Cannot be zero.");
-        // get new wallet index
-        if (purchasableTokens(walletIndex) == 0) {
-            require(walletIndex <= wallets.length, "Already the last one");
-            walletIndex++;
-        }
         // get swap token amount
         uint256 _tokenOut = getTokenOut(walletIndex, usdtIn);
         // get current wallet
@@ -118,6 +113,12 @@ contract SwapToken {
         totalSwapToken += _tokenOut;
         swapToken[walletIndex] += _tokenOut;
         _swapAccountToken[walletIndex][msg.sender] += _tokenOut;
+        // get new wallet index
+        uint256 _purchasable = purchasableTokens(walletIndex);
+        require(_purchasable == 0 || _purchasable >= _wallet.price, "Surplus cannot be less than price.");
+        if (_purchasable == 0 && walletIndex < wallets.length) {
+            walletIndex++;
+        }
         // transfer token to buyer
         TOKEN.transferFrom(_wallet.account, msg.sender, _tokenOut);
         emit Swap(_wallet.account, msg.sender, usdtIn, _tokenOut);
