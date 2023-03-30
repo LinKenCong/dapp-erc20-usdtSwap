@@ -1,6 +1,7 @@
 import { NextComponentType } from "next";
 import style from "./style.module.scss";
 import { Divider } from "antd";
+import { useLocalization } from "../../localization";
 
 const DividerLine = () => <Divider style={{ margin: "0.5rem 0", backgroundColor: "#505050" }} />;
 
@@ -20,28 +21,27 @@ type NoticInfo = {
 };
 
 const NoticeBoard: NextComponentType = () => {
+  // translation
+  const { t } = useLocalization();
   const noticInfo: NoticInfo[] = [
     {
-      contentText:
-        "Hello,Good morning.lady and gentleman, How do you do glod to meet you,Im Zhao Ye.gEnglish songs with other children.",
-      time: "2023,02.18 15:23",
+      contentText: t("notice_list_1"),
+      time: "",
     },
     {
-      contentText:
-        "Hello,Good morning.lady and gentleman, How do you do glod to meet you,Im Zhao Ye.gEnglish songs with other children.",
-      time: "2023,02.18 15:23",
+      contentText: t("notice_list_2"),
+      time: "",
     },
     {
-      contentText:
-        "Hello,Good morning.lady and gentleman, How do you do glod to meet you,Im Zhao Ye.gEnglish songs with other children.",
-      time: "2023,02.18 15:23",
+      contentText: t("notice_list_3"),
+      time: "",
     },
   ];
   return (
     <>
       <div className={style.NoticeBoard}>
         <section className={style.NoticeBoard_section}>
-          <h5>公告专栏</h5>
+          <h5>{t("title_notice_board")}</h5>
           <DividerLine />
           {noticInfo.map((item: NoticInfo, index: number) => {
             return <NoticItem key={index} contentText={item.contentText} time={item.time} />;

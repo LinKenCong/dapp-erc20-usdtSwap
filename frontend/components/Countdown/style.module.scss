@@ -4,7 +4,7 @@
   .text_content {
     display: flex;
     justify-content: center;
-    padding: 1rem 0;
+    padding: 1rem 0 0 0;
     text-align: center;
     .text_time {
       > div {
@@ -14,7 +14,7 @@
       }
       span {
         color: #fff;
-        font-size: 1.2rem;
+        font-size: 1.6rem;
       }
     }
   }

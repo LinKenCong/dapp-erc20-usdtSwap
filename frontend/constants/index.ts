@@ -32,8 +32,8 @@ export const CONTRACT_ZRO_MAP = {
 
 export const TOKEN_INFO_MAP = {
   ZRO: {
-    name: "ZRO Token",
-    symbol: "ZRO",
+    name: "ZROs Token",
+    symbol: "ZROs",
     decimals: "18",
   },
   usdt: {
@@ -44,8 +44,9 @@ export const TOKEN_INFO_MAP = {
 };
 
 export const SOCIAL_URL_LIST = {
-  twitter: "https://www.google.com/",
-  discord: "https://www.google.com/",
-  youtube: "https://www.google.com/",
-  telegram: "https://www.google.com/",
+  twitter: "https://twitter.com/ZeroneOfficial_",
+  discord: "https://discord.gg/b984JGErVN",
+  youtube: "https://www.youtube.com/@ZeroneOfficial",
+  telegram: "https://t.me/zeroneofficial_En",
+  medium: "https://zeroneofficial.medium.com/",
 };

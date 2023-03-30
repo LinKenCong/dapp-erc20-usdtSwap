@@ -1,14 +1,27 @@
 .ArticleSection {
-  .title {
-    font-size: 1.3rem;
-    font-weight: 800;
-    margin: 0;
-    padding: 0;
-  }
-  .content {
-    font-size: 0.9rem;
-    line-height: 1.5rem;
-    padding: 1rem 0;
+  .articleHTML {
+    > h1 {
+      font-size: 1.3rem;
+      font-weight: 800;
+      margin: 0;
+      padding: 0;
+      padding-bottom: 0.5rem;
+    }
+    > div {
+      font-size: 0.9rem;
+      line-height: 1.5rem;
+      padding: 0.2rem 0;
+    }
+    ul {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+      padding-left: 1rem;
+      li{
+        font-size: 0.8rem;
+        font-weight: 500;
+      }
+    }
   }
   .img {
     padding: 1rem 0;

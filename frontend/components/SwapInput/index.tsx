@@ -2,12 +2,15 @@ import style from "./style.module.scss";
 import { useContractWrite, usePrepareContractWrite } from "wagmi";
 import { Input, Divider, Button, notification } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
-import { ABI } from "../../constants";
+import { ABI, TOKEN_INFO_MAP } from "../../constants";
 import { ContractInfo, ContractList } from "../../constants/type";
 import { useEffect, useState } from "react";
 import { fromEth, toEth, formatToNumber, countPrice } from "../../utils";
 import { BigNumber, ethers } from "ethers";
 import NetwrokLoading from "../NetwrokLoading";
+import { useLocalization } from "../../localization";
+
+const TokenSymbol = TOKEN_INFO_MAP.ZRO.symbol;
 
 // antd
 const { Search } = Input;
@@ -17,6 +20,8 @@ const loadIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
 const placement = "top";
 
 const SwapInput = (props: { contractInfo: ContractInfo; contractList: ContractList }) => {
+  const { t } = useLocalization();
+
   const { contractInfo, contractList } = props;
   const [amount, setAmount] = useState(BigNumber.from(0));
   // max
@@ -51,22 +56,22 @@ const SwapInput = (props: { contractInfo: ContractInfo; contractList: ContractLi
     setBtnActive(false);
     try {
       api.open({
-        message: `Approve USDT`,
-        description: `Authorizing USDT to the Swap contract...`,
+        message: `${t("msg_approve_usdt")}`,
+        description: `${t("msg_description_approve_usdt")}`,
         placement,
       });
       const approveWrite = await approveContract?.writeAsync?.();
       await approveWrite?.wait().then((res: any) => {
         if (res.status == 1) {
           api.success({
-            message: `Approve USDT Success`,
+            message: `${t("msg_approve_usdt_success")}`,
             description: `Hash: ${res?.transactionHash}`,
             placement,
             duration: null,
           });
         } else {
           api.error({
-            message: `Approve USDT Error`,
+            message: `${t("msg_approve_usdt_error")}`,
             description: `Hash: ${res?.transactionHash}`,
             placement,
             duration: null,
@@ -93,8 +98,8 @@ const SwapInput = (props: { contractInfo: ContractInfo; contractList: ContractLi
     if (amount.eq(0)) return;
     if (!verified()) {
       return api.error({
-        message: `Params Error`,
-        description: `Check You Token Balance.`,
+        message: `${t("msg_params_error")}`,
+        description: `${t("msg_description_params_error")}`,
         placement,
         duration: null,
       });
@@ -102,22 +107,22 @@ const SwapInput = (props: { contractInfo: ContractInfo; contractList: ContractLi
     setBtnActive(false);
     try {
       api.open({
-        message: `Swap USDT to ZRO`,
-        description: `Swap Token...`,
+        message: `${t("msg_swap_usdt")}`,
+        description: `${t("msg_description_swap_usdt")}`,
         placement,
       });
       const swapTokenWrite = await swapTokenContract?.writeAsync?.();
       await swapTokenWrite?.wait().then((res: any) => {
         if (res.status == 1) {
           api.success({
-            message: `Swap USDT to ZRO Success`,
+            message: `${t("msg_swap_usdt_success")}`,
             description: `Hash: ${res?.transactionHash}`,
             placement,
             duration: null,
           });
         } else {
           api.error({
-            message: `Swap USDT to ZRO Error`,
+            message: `${t("msg_swap_usdt_error")}`,
             description: `Hash: ${res?.transactionHash}`,
             placement,
             duration: null,
@@ -143,7 +148,7 @@ const SwapInput = (props: { contractInfo: ContractInfo; contractList: ContractLi
     } else if (contractInfo.purchasable.eq(0)) {
       return (
         <Button disabled size="large" className={style.item_btn} style={{ backgroundColor: "#fff" }}>
-          Sold out
+          {t("btn_sold_out")}
         </Button>
       );
     } else {
@@ -151,7 +156,7 @@ const SwapInput = (props: { contractInfo: ContractInfo; contractList: ContractLi
       if (isApprove) {
         return (
           <Button onClick={swapTokenHandle} disabled={!btnActive} size="large" className={style.item_btn_tx}>
-            立即购买
+            {t("btn_buy_now")}
           </Button>
         );
       } else {
@@ -163,7 +168,7 @@ const SwapInput = (props: { contractInfo: ContractInfo; contractList: ContractLi
             className={style.item_btn}
             type="primary"
           >
-            授权 USDT
+            {t("btn_approve_usdt")}
           </Button>
         );
       }
@@ -176,7 +181,7 @@ const SwapInput = (props: { contractInfo: ContractInfo; contractList: ContractLi
       {contractInfo ? (
         <div className={style.SwapInput}>
           <section className={style.SwapInput_section}>
-            <h5>购买数量 {formatToNumber(amount)}</h5>
+            <h5>{t("title_purchase_quantity")}</h5>
             <Search
               size="large"
               className={style.item_input}
@@ -196,21 +201,23 @@ const SwapInput = (props: { contractInfo: ContractInfo; contractList: ContractLi
             {checkBtn()}
           </section>
           <section className={style.SwapInput_section}>
-            <h5>状态详情</h5>
+            <h5>{t("title_status_details")}</h5>
             <Divider style={{ margin: "0.5rem 0", backgroundColor: "#505050" }} />
             <table className={style.info_table}>
               <tbody className={style.info_tbody}>
                 <tr>
-                  <td>当前价格</td>
-                  <td>{`1 ZRO = ${formatToNumber(contractInfo.walletPrice)} USDT`}</td>
+                  <td>{t("label_current_price")}</td>
+                  <td>{`1 ${TokenSymbol} = ${formatToNumber(contractInfo.walletPrice)} USDT`}</td>
                 </tr>
                 <tr>
-                  <td>贡献者总数</td>
+                  <td>{t("label_current_swap_accounts")}</td>
                   <td>{contractInfo.totalSwapAccounts.toNumber()}</td>
                 </tr>
                 <tr>
-                  <td>您购买的</td>
-                  <td>{formatToNumber(contractInfo.totalSwapOf).toFixed(2)} ZRO</td>
+                  <td>{t("label_current_swap_quantity")}</td>
+                  <td>
+                    {formatToNumber(contractInfo.totalSwapOf).toFixed(2)} {TokenSymbol}
+                  </td>
                 </tr>
               </tbody>
             </table>
