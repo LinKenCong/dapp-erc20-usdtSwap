@@ -14,9 +14,7 @@ const NetwrokLoading: NextComponentType = () => {
         }}
       >
         {loadIcon}
-        <span
-          style={{ paddingLeft: "1rem", fontSize: "0.8rem" }}
-        >{`Netwrok Loading...`}</span>
+        <span style={{ paddingLeft: "1rem", fontSize: "0.8rem" }}>{`Netwrok Loading...`}</span>
       </div>
     </>
   );

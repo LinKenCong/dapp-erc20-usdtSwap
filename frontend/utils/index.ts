@@ -12,10 +12,7 @@ export const countPrice = (value: BigNumber, price: BigNumber) => {
   const decimals = BigNumber.from(10).pow(18);
   return value.mul(price).div(decimals);
 };
-export const countPercent = (
-  buy: number | string,
-  max: number | string
-): number => {
+export const countPercent = (buy: number | string, max: number | string): number => {
   buy = Number(buy);
   max = Number(max);
   const sell = max - buy;

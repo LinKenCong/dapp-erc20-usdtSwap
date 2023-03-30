@@ -16,27 +16,17 @@ const loadIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
 // notification
 const placement = "top";
 
-const SwapInput = (props: {
-  contractInfo: ContractInfo;
-  contractList: ContractList;
-}) => {
+const SwapInput = (props: { contractInfo: ContractInfo; contractList: ContractList }) => {
   const { contractInfo, contractList } = props;
   const [amount, setAmount] = useState(BigNumber.from(0));
   // max
   const onMax = (value: string) => {
-    const usdtIn = countPrice(
-      contractInfo.purchasable,
-      contractInfo.walletPrice
-    );
+    const usdtIn = countPrice(contractInfo.purchasable, contractInfo.walletPrice);
     const decimals = BigNumber.from(10).pow(18);
     const balanceBuyCount = Number(
-      fromEth(
-        contractInfo.usdtBalance.div(contractInfo.walletPrice).mul(decimals)
-      )
+      fromEth(contractInfo.usdtBalance.div(contractInfo.walletPrice).mul(decimals))
     ).toFixed(2);
-    const maxAmount = contractInfo.usdtBalance.gte(usdtIn)
-      ? contractInfo.purchasable
-      : toEth(balanceBuyCount);
+    const maxAmount = contractInfo.usdtBalance.gte(usdtIn) ? contractInfo.purchasable : toEth(balanceBuyCount);
     setAmount(maxAmount);
   };
   // btn
@@ -45,11 +35,7 @@ const SwapInput = (props: {
 
   const verified = (): boolean => {
     const usdtIn = countPrice(amount, contractInfo.walletPrice);
-    return (
-      !amount.eq(0) &&
-      contractInfo.allowance.gte(usdtIn) &&
-      contractInfo.usdtBalance.gte(usdtIn)
-    );
+    return !amount.eq(0) && contractInfo.allowance.gte(usdtIn) && contractInfo.usdtBalance.gte(usdtIn);
   };
 
   // approveUSDTHandle
@@ -57,10 +43,7 @@ const SwapInput = (props: {
     address: contractList.usdt,
     abi: ABI.ERC20,
     functionName: "approve",
-    args: [
-      contractList.swaptoken,
-      countPrice(amount, contractInfo.walletPrice),
-    ],
+    args: [contractList.swaptoken, countPrice(amount, contractInfo.walletPrice)],
     enabled: !amount.eq(0),
   });
   const approveContract = useContractWrite(approveConfig.config);
@@ -153,38 +136,21 @@ const SwapInput = (props: {
     let isLock: Boolean = !btnActive;
     if (isLock) {
       return (
-        <Button
-          disabled
-          size="large"
-          className={style.item_btn}
-          style={{ backgroundColor: "#fff" }}
-        >
+        <Button disabled size="large" className={style.item_btn} style={{ backgroundColor: "#fff" }}>
           {loadIcon}
         </Button>
       );
     } else if (contractInfo.purchasable.eq(0)) {
       return (
-        <Button
-          disabled
-          size="large"
-          className={style.item_btn}
-          style={{ backgroundColor: "#fff" }}
-        >
+        <Button disabled size="large" className={style.item_btn} style={{ backgroundColor: "#fff" }}>
           Sold out
         </Button>
       );
     } else {
-      const isApprove: Boolean = contractInfo.allowance.gte(
-        countPrice(amount, contractInfo.walletPrice)
-      );
+      const isApprove: Boolean = contractInfo.allowance.gte(countPrice(amount, contractInfo.walletPrice));
       if (isApprove) {
         return (
-          <Button
-            onClick={swapTokenHandle}
-            disabled={!btnActive}
-            size="large"
-            className={style.item_btn_tx}
-          >
+          <Button onClick={swapTokenHandle} disabled={!btnActive} size="large" className={style.item_btn_tx}>
             立即购买
           </Button>
         );
@@ -222,9 +188,7 @@ const SwapInput = (props: {
               onChange={(e: any) => {
                 const format = e.target.value.replace(/\-/g, "");
                 const value = toEth(Number(format).toFixed(2));
-                const amount = value.gt(contractInfo.purchasable)
-                  ? contractInfo.purchasable
-                  : value;
+                const amount = value.gt(contractInfo.purchasable) ? contractInfo.purchasable : value;
                 setAmount(amount);
               }}
               onSearch={onMax}
@@ -233,16 +197,12 @@ const SwapInput = (props: {
           </section>
           <section className={style.SwapInput_section}>
             <h5>状态详情</h5>
-            <Divider
-              style={{ margin: "0.5rem 0", backgroundColor: "#505050" }}
-            />
+            <Divider style={{ margin: "0.5rem 0", backgroundColor: "#505050" }} />
             <table className={style.info_table}>
               <tbody className={style.info_tbody}>
                 <tr>
                   <td>当前价格</td>
-                  <td>{`1 ZRO = ${formatToNumber(
-                    contractInfo.walletPrice
-                  )} USDT`}</td>
+                  <td>{`1 ZRO = ${formatToNumber(contractInfo.walletPrice)} USDT`}</td>
                 </tr>
                 <tr>
                   <td>贡献者总数</td>
@@ -250,9 +210,7 @@ const SwapInput = (props: {
                 </tr>
                 <tr>
                   <td>您购买的</td>
-                  <td>
-                    {formatToNumber(contractInfo.totalSwapOf).toFixed(2)} ZRO
-                  </td>
+                  <td>{formatToNumber(contractInfo.totalSwapOf).toFixed(2)} ZRO</td>
                 </tr>
               </tbody>
             </table>

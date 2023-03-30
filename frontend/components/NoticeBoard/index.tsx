@@ -2,9 +2,7 @@ import { NextComponentType } from "next";
 import style from "./style.module.scss";
 import { Divider } from "antd";
 
-const DividerLine = () => (
-  <Divider style={{ margin: "0.5rem 0", backgroundColor: "#505050" }} />
-);
+const DividerLine = () => <Divider style={{ margin: "0.5rem 0", backgroundColor: "#505050" }} />;
 
 const NoticItem = ({ contentText, time }: NoticInfo) => {
   return (
@@ -46,13 +44,7 @@ const NoticeBoard: NextComponentType = () => {
           <h5>公告专栏</h5>
           <DividerLine />
           {noticInfo.map((item: NoticInfo, index: number) => {
-            return (
-              <NoticItem
-                key={index}
-                contentText={item.contentText}
-                time={item.time}
-              />
-            );
+            return <NoticItem key={index} contentText={item.contentText} time={item.time} />;
           })}
         </section>
       </div>

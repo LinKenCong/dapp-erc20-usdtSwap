@@ -12,12 +12,7 @@ const Countdown: NextComponentType = () => {
     <>
       <div className={style.Countdown}>
         <div className={style.text_content}>
-          <Countdown
-            className={style.text_time}
-            title="预售倒计时"
-            value={deadline}
-            format="D 天 H 时 m 分 s 秒"
-          />
+          <Countdown className={style.text_time} title="预售倒计时" value={deadline} format="D 天 H 时 m 分 s 秒" />
         </div>
       </div>
     </>

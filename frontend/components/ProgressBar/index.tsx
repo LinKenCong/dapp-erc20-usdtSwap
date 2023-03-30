@@ -16,9 +16,7 @@ const ProgressBar = (props: { contractInfo: ContractInfo }) => {
     if (contractInfo) {
       setMaxToken(fromEth(contractInfo.walletMaxSwap));
       setSellToken(fromEth(contractInfo.purchasable));
-      setBuyToken(
-        fromEth(contractInfo.walletMaxSwap.sub(contractInfo.purchasable))
-      );
+      setBuyToken(fromEth(contractInfo.walletMaxSwap.sub(contractInfo.purchasable)));
     }
   }, [contractInfo]);
 

@@ -19,19 +19,8 @@ import icon_bnb from "../assets/icon/BNB.svg";
 import Image from "next/image";
 import { COUNTDOWN } from "../constants";
 
-import {
-  useAccount,
-  useContractRead,
-  useContractReads,
-  useChainId,
-} from "wagmi";
-import {
-  ABI,
-  CONTRACT_SWAPTOKEN_MAP,
-  CONTRACT_USDT_MAP,
-  CONTRACT_ZRO_MAP,
-  SupportedChainId,
-} from "../constants";
+import { useAccount, useContractRead, useContractReads, useChainId } from "wagmi";
+import { ABI, CONTRACT_SWAPTOKEN_MAP, CONTRACT_USDT_MAP, CONTRACT_ZRO_MAP, SupportedChainId } from "../constants";
 import { ContractInfo, ContractList } from "../constants/type";
 import { BigNumber, ethers } from "ethers";
 
@@ -176,10 +165,7 @@ const Home: NextPage = () => {
     <>
       <Head>
         <title>USDT SWAP App</title>
-        <meta
-          content="USDT SWAP App by @kyrie"
-          name="description"
-        />
+        <meta content="USDT SWAP App by @kyrie" name="description" />
         <link href="/logo.png" rel="icon" />
       </Head>
 
@@ -194,10 +180,7 @@ const Home: NextPage = () => {
                 <div className={style.part_left}>
                   <ArticleSection />
                   <SocialUrlList />
-                  <TokenInfoList
-                    contractInfo={contractInfo}
-                    contractList={contractList}
-                  />
+                  <TokenInfoList contractInfo={contractInfo} contractList={contractList} />
                 </div>
                 <div className={style.part_right}>
                   <div className={style.part_right_top}>
@@ -221,10 +204,7 @@ const Home: NextPage = () => {
                     </div>
                   </div>
                   <div className={style.part_right_bottom}>
-                    <SwapInput
-                      contractInfo={contractInfo}
-                      contractList={contractList}
-                    />
+                    <SwapInput contractInfo={contractInfo} contractList={contractList} />
                     <NoticeBoard />
                   </div>
                 </div>

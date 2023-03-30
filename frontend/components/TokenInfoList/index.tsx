@@ -9,10 +9,7 @@ const SwapToken = {
 
 const ItemStyle_Address = { color: "#F7D358" };
 
-const TokenInfoList = (props: {
-  contractInfo: ContractInfo;
-  contractList: ContractList;
-}) => {
+const TokenInfoList = (props: { contractInfo: ContractInfo; contractList: ContractList }) => {
   const { contractInfo, contractList } = props;
 
   return (
@@ -32,15 +29,9 @@ const TokenInfoList = (props: {
           <Descriptions.Item label="预售地址" contentStyle={ItemStyle_Address}>
             {contractInfo.walletAccount}
           </Descriptions.Item>
-          <Descriptions.Item label="代币名称">
-            {SwapToken.name}
-          </Descriptions.Item>
-          <Descriptions.Item label="代币简称">
-            {SwapToken.symbol}
-          </Descriptions.Item>
-          <Descriptions.Item label="标记小数">
-            {SwapToken.decimals}
-          </Descriptions.Item>
+          <Descriptions.Item label="代币名称">{SwapToken.name}</Descriptions.Item>
+          <Descriptions.Item label="代币简称">{SwapToken.symbol}</Descriptions.Item>
+          <Descriptions.Item label="标记小数">{SwapToken.decimals}</Descriptions.Item>
           <Descriptions.Item label="代币地址" contentStyle={ItemStyle_Address}>
             {contractList.zro}
           </Descriptions.Item>
