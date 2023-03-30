@@ -62,3 +62,14 @@
     padding: 2rem;
   }
 }
+@media (max-width: 768px) {
+  .page_content {
+    flex-direction: column;
+  }
+  .part_left {
+    order: 2;
+  }
+  .part_right {
+    order: 1;
+  }
+}

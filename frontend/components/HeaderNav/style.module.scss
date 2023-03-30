@@ -55,3 +55,18 @@
     }
   }
 }
+@media (max-width: 768px) {
+  .HeaderNav {
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding: 1rem 0;
+    .logo {}
+    .btn_list{
+      padding-top: 1rem;
+      justify-content: flex-end;
+      width: 100%;
+    }
+  }
+  
+}
