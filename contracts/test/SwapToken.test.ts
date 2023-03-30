@@ -13,17 +13,10 @@ describe("Token contract", function () {
     const token = await TokenFactory.deploy();
     const usdt = await TokenFactory.deploy();
     const SwapTokenFactory = await ethers.getContractFactory("SwapToken");
-    const swapToken = await SwapTokenFactory.deploy(
-      token.address,
-      usdt.address
-    );
+    const swapToken = await SwapTokenFactory.deploy(token.address, usdt.address);
     // give swapWallets balance
-    const maxSwapList = [
-      5000000, 10000000, 10000000, 10000000, 10000000, 10000000,
-    ];
-    const maxSwapEthList = maxSwapList.map((item: any) =>
-      ethers.utils.parseEther(String(item))
-    );
+    const maxSwapList = [5000000, 10000000, 10000000, 10000000, 10000000, 10000000];
+    const maxSwapEthList = maxSwapList.map((item: any) => ethers.utils.parseEther(String(item)));
     expect(maxSwapEthList.length).to.equal(6);
     {
       // transfer token to wallet
@@ -41,26 +34,19 @@ describe("Token contract", function () {
     // wallet approve token to swapToken contract
     {
       for (let i = 0; i < swapWallets.length; i++) {
-        await token
-          .connect(walletSigner[i])
-          .approve(swapToken.address, maxSwapEthList[i]);
+        await token.connect(walletSigner[i]).approve(swapToken.address, maxSwapEthList[i]);
       }
     }
     {
       // check wallet approve
       for (let i = 0; i < swapWallets.length; i++) {
-        const allowance = await token.allowance(
-          swapWallets[i],
-          swapToken.address
-        );
+        const allowance = await token.allowance(swapWallets[i], swapToken.address);
         expect(allowance).to.equal(maxSwapEthList[i]);
       }
     }
     // get token price
     const priceList = [0.006, 0.007, 0.008, 0.009, 0.1, 0.11];
-    const priceEthList = priceList.map((item: any) =>
-      ethers.utils.parseEther(String(item))
-    );
+    const priceEthList = priceList.map((item: any) => ethers.utils.parseEther(String(item)));
     expect(priceEthList.length).to.equal(6);
 
     {
@@ -76,9 +62,9 @@ describe("Token contract", function () {
         }
       }
       // if change wallet agian should be error
-      await expect(
-        swapToken.initWallet(swapWallets, maxSwapEthList, priceEthList)
-      ).to.be.revertedWith("Wallet initialized.");
+      await expect(swapToken.initWallet(swapWallets, maxSwapEthList, priceEthList)).to.be.revertedWith(
+        "Wallet initialized."
+      );
     }
     // user swap
     const testUser = accounts[8];
@@ -92,13 +78,8 @@ describe("Token contract", function () {
       const nowIndex = await swapToken.walletIndex();
       expect(String(nowIndex)).to.equal("0");
       const walletSwapCount = await swapToken.swapToken(nowIndex);
-      const walletAccountSwapCount = await swapToken.getWalletSwapOf(
-        nowIndex,
-        testUser.address
-      );
-      expect(tokenbalance).to.equal(
-        ethers.utils.parseEther(String(maxSwapList[0]))
-      );
+      const walletAccountSwapCount = await swapToken.getWalletSwapOf(nowIndex, testUser.address);
+      expect(tokenbalance).to.equal(ethers.utils.parseEther(String(maxSwapList[0])));
       expect(walletSwapCount).to.equal(tokenbalance);
       expect(walletAccountSwapCount).to.equal(tokenbalance);
     }
@@ -119,10 +100,7 @@ describe("Token contract", function () {
       await swapToken.connect(testUser).swap(testEth);
       const nowIndex = await swapToken.walletIndex();
       expect(String(nowIndex)).to.equal("1");
-      console.log(
-        "purchasableTokens",
-        ethers.utils.formatEther(await swapToken.purchasableTokens(nowIndex))
-      );
+      console.log("purchasableTokens", ethers.utils.formatEther(await swapToken.purchasableTokens(nowIndex)));
     }
   });
 });

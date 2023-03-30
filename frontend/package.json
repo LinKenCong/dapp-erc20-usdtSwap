@@ -1,5 +1,5 @@
 {
-  "name": "dapp-erc20-usdt-swap-frontend",
+  "name": "frontend",
   "private": true,
   "version": "0.1.0",
   "scripts": {
@@ -22,6 +22,7 @@
     "@types/react": "^18.0.9",
     "eslint": "^8.15.0",
     "eslint-config-next": "^12.1.6",
+    "prettier": "2.8.7",
     "sass": "^1.59.3",
     "typescript": "^4.9.4"
   }

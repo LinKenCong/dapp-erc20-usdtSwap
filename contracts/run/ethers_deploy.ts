@@ -85,14 +85,8 @@ const createAccount = () => {
 const deployToken = async () => {
   const provider = new ethers.providers.JsonRpcProvider(rpc);
   const owner = new ethers.Wallet(privateKey || "", provider);
-  const Factory_ERC20Mock = new ethers.ContractFactory(
-    ABI_ERC20Mock.abi,
-    ABI_ERC20Mock.bytecode
-  );
-  const USDT = await Factory_ERC20Mock.connect(owner).deploy(
-    "USDT Test",
-    "USDT"
-  );
+  const Factory_ERC20Mock = new ethers.ContractFactory(ABI_ERC20Mock.abi, ABI_ERC20Mock.bytecode);
+  const USDT = await Factory_ERC20Mock.connect(owner).deploy("USDT Test", "USDT");
   const ZRO = await Factory_ERC20Mock.connect(owner).deploy("ZRO Test", "ZRO");
   await ZRO.deployed();
   await USDT.deployed();
@@ -106,10 +100,7 @@ const deployToken = async () => {
 const deploySwap = async (ZRO: string, USDT: string) => {
   const provider = new ethers.providers.JsonRpcProvider(rpc);
   const owner = new ethers.Wallet(privateKey || "", provider);
-  const Factory_SwapToken = new ethers.ContractFactory(
-    ABI_SwapToken.abi,
-    ABI_SwapToken.bytecode
-  );
+  const Factory_SwapToken = new ethers.ContractFactory(ABI_SwapToken.abi, ABI_SwapToken.bytecode);
   const SwapToken = await Factory_SwapToken.connect(owner).deploy(
     ZRO,
     USDT,
@@ -141,18 +132,10 @@ const sendGasHandle = async (amount: string, addressList: string[]) => {
   console.log(`-----Done =>`, "sendGasHandle");
 };
 
-const mintTokenHandle = async (
-  token: string,
-  amountList: string[],
-  addressList: string[]
-) => {
+const mintTokenHandle = async (token: string, amountList: string[], addressList: string[]) => {
   const provider = new ethers.providers.JsonRpcProvider(rpc);
   const owner = new ethers.Wallet(privateKey || "", provider);
-  const Token_contract = new ethers.Contract(
-    token,
-    ABI_ERC20Mock.abi,
-    provider
-  );
+  const Token_contract = new ethers.Contract(token, ABI_ERC20Mock.abi, provider);
   const Token = Token_contract.connect(owner);
   for (let i = 0; i < addressList.length; i++) {
     const ethAmount = ethers.utils.parseEther(amountList[i]);
@@ -165,18 +148,9 @@ const mintTokenHandle = async (
   }
   console.log(`-----Done =>`, "mintTokenHandle");
 };
-const approveTokenHandle = async (
-  token: string,
-  to: string,
-  amountList: string[],
-  privateKeyList: string[]
-) => {
+const approveTokenHandle = async (token: string, to: string, amountList: string[], privateKeyList: string[]) => {
   const provider = new ethers.providers.JsonRpcProvider(rpc);
-  const Token_contract = new ethers.Contract(
-    token,
-    ABI_ERC20Mock.abi,
-    provider
-  );
+  const Token_contract = new ethers.Contract(token, ABI_ERC20Mock.abi, provider);
   for (let i = 0; i < privateKeyList.length; i++) {
     const ethAmount = ethers.utils.parseEther(amountList[i]);
     const wallet = new ethers.Wallet(privateKeyList[i], provider);
