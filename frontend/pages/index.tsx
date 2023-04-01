@@ -164,7 +164,7 @@ const Home: NextPage = () => {
   return (
     <>
       <Head>
-        <title>USDT SWAP App</title>
+        <title>ZROs SWAP App</title>
         <meta content="USDT SWAP App by @kyrie" name="description" />
         <link href="/logo.png" rel="icon" />
       </Head>
