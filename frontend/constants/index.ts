@@ -26,7 +26,7 @@ export const CONTRACT_USDT_MAP = {
 };
 
 export const CONTRACT_ZRO_MAP = {
-  [SupportedChainId.BSC]: "0xC1A6e4D1d81Ce56a6527460F6c1bA03Ce8fbe2EC", //no
+  [SupportedChainId.BSC]: "0xa9A444d6AC51078bfB60F5FF755F0A037916dAEA",
   [SupportedChainId.BSC_TESTNET]: "0xfD69a1aAE97A910f134Dc01BC53F8a02183fa321",
 };
 
