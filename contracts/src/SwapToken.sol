@@ -108,8 +108,6 @@ contract SwapToken {
         require(purchasableTokens(walletIndex) >= _tokenOut, "Insufficient tokens available for purchase.");
         require(TOKEN.balanceOf(_wallet.account) >= _tokenOut, "Insufficient contract balance.");
         require(TOKEN.allowance(_wallet.account, address(this)) >= _tokenOut, "Insufficient contract allowance.");
-        // pay usdt to payee
-        USDT.transferFrom(msg.sender, payee, usdtIn);
         // update contract status
         if (totalSwapOf[msg.sender] == 0) {
             totalSwapAccounts++;
@@ -127,6 +125,8 @@ contract SwapToken {
         if (_purchasable == 0 && walletIndex < wallets.length - 1) {
             walletIndex++;
         }
+        // pay usdt to payee
+        USDT.transferFrom(msg.sender, payee, usdtIn);
         // transfer token to buyer
         TOKEN.transferFrom(_wallet.account, msg.sender, _tokenOut);
         emit Swap(_wallet.account, msg.sender, usdtIn, _tokenOut);

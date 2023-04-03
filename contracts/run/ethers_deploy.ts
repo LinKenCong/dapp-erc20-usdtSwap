@@ -1,7 +1,9 @@
 // import { ethers } from "hardhat";
-import { BigNumber, ethers } from "ethers";
+import { BigNumber, ethers, utils } from "ethers";
 import ABI_ERC20Mock from "../artifacts/src/ERC20Mock.sol/ERC20Mock.json";
 import ABI_SwapToken from "../artifacts/src/SwapToken.sol/SwapToken.json";
+
+import { SWAP_WALLET_MAXSWAP_LIST } from "../constants";
 
 const privateKey = process.env.PRIVATE_KEY_TEST;
 const rpc = process.env.ETH_NODE_URI_BSC_TEST;
@@ -188,17 +190,21 @@ const main = async () => {
   // );
 
   // step.4
-  await mintTokenHandle(
-    CONTRACT_MAP.ZRO,
-    TEST_WALLETS_POOL_INFO.map((item: any) => item.totalSupply),
-    WALLETS_ADDRESS
-  );
-  await sendGasHandle("0.001", WALLETS_ADDRESS);
-  await approveTokenHandle(
-    CONTRACT_MAP.ZRO,
-    CONTRACT_MAP.SWAPTOKEN,
-    TEST_WALLETS_POOL_INFO.map((item: any) => item.totalSupply),
-    WALLETS_PRIVATE_KEY
+  // await mintTokenHandle(
+  //   CONTRACT_MAP.ZRO,
+  //   TEST_WALLETS_POOL_INFO.map((item: any) => item.totalSupply),
+  //   WALLETS_ADDRESS
+  // );
+  // await sendGasHandle("0.001", WALLETS_ADDRESS);
+  // await approveTokenHandle(
+  //   CONTRACT_MAP.ZRO,
+  //   CONTRACT_MAP.SWAPTOKEN,
+  //   TEST_WALLETS_POOL_INFO.map((item: any) => item.totalSupply),
+  //   WALLETS_PRIVATE_KEY
+  // );
+  console.log(
+    "token",
+    SWAP_WALLET_MAXSWAP_LIST.map((item: string) => String(utils.parseEther(item)))
   );
 };
 main().catch((error) => {

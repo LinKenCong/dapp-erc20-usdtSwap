@@ -7,16 +7,13 @@ import { bsc, bscTestnet } from "wagmi/chains";
 import { publicProvider } from "wagmi/providers/public";
 
 const { chains, provider, webSocketProvider } = configureChains(
-  // [
-  //   bsc,
-  //   ...(process.env.NEXT_PUBLIC_ENABLE_TESTNETS === "true" ? [bscTestnet] : []),
-  // ],
-  [bscTestnet],
+  [bsc, ...(process.env.NEXT_PUBLIC_ENABLE_TESTNETS === "true" ? [bscTestnet] : [])],
+  // [bscTestnet],
   [publicProvider()]
 );
 
 const { connectors } = getDefaultWallets({
-  appName: "USDT SWAP App",
+  appName: "ZROs SWAP App",
   chains,
 });
 

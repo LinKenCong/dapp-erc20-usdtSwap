@@ -16,12 +16,12 @@ export enum SupportedChainId {
 }
 
 export const CONTRACT_SWAPTOKEN_MAP = {
-  [SupportedChainId.BSC]: "0x43b27367EB8c5A2c25134cB2E40Cee765C2Edb39", //no
+  [SupportedChainId.BSC]: "0x8C02b459e8D57ad0DE4952c5a957aABf1fFEb7b0",
   [SupportedChainId.BSC_TESTNET]: "0xCaA05157d50d473FC0d48c5199Bd353Ee3b5F3Bf",
 };
 
 export const CONTRACT_USDT_MAP = {
-  [SupportedChainId.BSC]: "0x55d398326f99059fF775485246999027B3197955", //no
+  [SupportedChainId.BSC]: "0x55d398326f99059fF775485246999027B3197955",
   [SupportedChainId.BSC_TESTNET]: "0x70AF9f834E448C1a115Ea98cc151A315e6538248",
 };
 

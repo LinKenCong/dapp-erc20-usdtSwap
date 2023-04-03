@@ -26,17 +26,27 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     return;
   }
 
-  // deploy params
+  // // deploy params ----- MAIN
   const deployParams = [
-    utils.getAddress(CONTRACT_MAP.ZROs.test),
-    utils.getAddress(CONTRACT_MAP.USDT.test),
-    utils.getAddress(PAYEE.test),
+    utils.getAddress(CONTRACT_MAP.ZROs.main),
+    utils.getAddress(CONTRACT_MAP.USDT.main),
+    utils.getAddress(PAYEE.main),
     SWAP_WALLET_ADDRESS_LIST.map((item: string) => utils.getAddress(item)),
     SWAP_WALLET_MAXSWAP_LIST.map((item: string) => utils.parseEther(item)),
     SWAP_WALLET_PRICE_LIST.map((item: string) => utils.parseEther(item)),
   ];
 
-  // console.log({ deployParams });
+  // deploy params ----- TEST
+  // const deployParams = [
+  //   utils.getAddress(CONTRACT_MAP.ZROs.test),
+  //   utils.getAddress(CONTRACT_MAP.USDT.test),
+  //   utils.getAddress(PAYEE.test),
+  //   SWAP_WALLET_ADDRESS_LIST.map((item: string) => utils.getAddress(item)),
+  //   SWAP_WALLET_MAXSWAP_LIST.map((item: string) => utils.parseEther(item)),
+  //   SWAP_WALLET_PRICE_LIST.map((item: string) => utils.parseEther(item)),
+  // ];
+
+  console.log({ deployParams });
 
   // deploy
   await deploy("SwapToken", {
