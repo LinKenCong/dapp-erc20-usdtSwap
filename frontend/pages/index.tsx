@@ -15,9 +15,11 @@ import "antd/dist/reset.css";
 import { useEffect, useState } from "react";
 import logo from "../assets/logo/logo2.png";
 import active_logo from "../assets/logo/logo3.png";
+import active_logo_en from "../assets/logo/logo4.png";
 import icon_bnb from "../assets/icon/BNB.svg";
 import Image from "next/image";
 import { COUNTDOWN } from "../constants";
+import { useLocalization } from "../localization";
 
 import { useAccount, useContractRead, useContractReads, useChainId } from "wagmi";
 import { ABI, CONTRACT_SWAPTOKEN_MAP, CONTRACT_USDT_MAP, CONTRACT_ZRO_MAP, SupportedChainId } from "../constants";
@@ -25,6 +27,8 @@ import { ContractInfo, ContractList } from "../constants/type";
 import { BigNumber, ethers } from "ethers";
 
 const Home: NextPage = () => {
+  // translation
+  const { t, changeLanguage, currentLanguage } = useLocalization();
   // page load
   const [domLoaded, setDomLoaded] = useState(false);
   // countdown
@@ -192,7 +196,7 @@ const Home: NextPage = () => {
                       {onFinish ? (
                         <>
                           <div className={style.row_icon_active}>
-                            <Image src={active_logo} alt="logo" />
+                            <Image src={currentLanguage() == "cn" ? active_logo : active_logo_en} alt="logo" />
                           </div>
                           <ProgressBar contractInfo={contractInfo} />
                         </>
